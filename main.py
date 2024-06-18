@@ -2,20 +2,32 @@ from spanish_words import common_words
 from replit import clear
 from art import logo
 import random
+import os
+
+HIGH_SCORE_FILE = "highscore.txt"
+
+def get_high_score():
+    if os.path.exists(HIGH_SCORE_FILE):
+        with open(HIGH_SCORE_FILE, "r") as file:
+            return file.read().strip().split(',')
+    return ["", "0"]
+
+def save_high_score(name, score):
+    with open(HIGH_SCORE_FILE, "w") as file:
+        file.write(f"{name},{score}")
 
 def flash_user(common_words):
     random.shuffle(common_words)
     score = 0
     questions_answered = 0
-    # Continue or end the game loop based on 'y' / 'n' answer
     should_continue = True
+    high_scorer, high_score = get_high_score()
 
     def end():
         nonlocal should_continue 
         end_game = input("Would you like to continue?.. 'y' or 'n': ").lower()
         should_continue = True if end_game == "y" else False
         if should_continue:
-            # Clear the console if the user chooses to continue
             clear()  
             print(logo)
 
@@ -26,18 +38,23 @@ def flash_user(common_words):
 
         if user_answer in correct_answers:
             print("Correct! Well done.\n")
-            # Add +1 to score for every correct answer
             score += 1
         else:
             print(f"I taught you better than that. Wrong! The correct answer is '{', '.join(word['English'])}'.\n")
 
-        # Add +1 to questions_answered based on how many times the loop is ran
         questions_answered += 1
         end()
         if not should_continue:
             break
 
     print(f"Quiz complete! Your score: {score}/{questions_answered}")
+    if score > int(high_score):
+        print("Congratulations! You've achieved the highest score!")
+        name = input("Please enter your name: ").strip()
+        save_high_score(name, score)
+        print(f"New high score by {name}: {score}")
+    else:
+        print(f"The highest score is {high_score} by {high_scorer}")
 
 def main():
     print(logo)
