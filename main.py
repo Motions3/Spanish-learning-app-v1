@@ -9,7 +9,11 @@ HIGH_SCORE_FILE = "highscore.txt"
 def get_high_score():
     if os.path.exists(HIGH_SCORE_FILE):
         with open(HIGH_SCORE_FILE, "r") as file:
-            return file.read().strip().split(',')
+            content = file.read().strip()
+            if content:
+                parts = content.split(',')
+                if len(parts) == 2:
+                    return parts
     return ["", "0"]
 
 def save_high_score(name, score):
@@ -59,6 +63,9 @@ def flash_user(common_words):
 def main():
     print(logo)
     print("Welcome to the Spanish Learning Optimal Words app. Better known as 'SLOW'.")
+    high_scorer, high_score = get_high_score()
+    if high_score != "0":
+        print(f"The highest score is {high_score} by {high_scorer}.\n")
     input("Press Enter to begin showing the flashcards...\n")
     flash_user(common_words)
 
