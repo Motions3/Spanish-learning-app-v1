@@ -1,10 +1,12 @@
 from spanish_words import common_words
-from replit import clear
 from art import logo
 import random
 import os
 
 HIGH_SCORE_FILE = "highscore.txt"
+
+def clear_console():
+    print("\n" * 100)
 
 def get_high_score():
     if os.path.exists(HIGH_SCORE_FILE):
@@ -28,11 +30,11 @@ def flash_user(common_words):
     high_scorer, high_score = get_high_score()
 
     def end():
-        nonlocal should_continue 
+        nonlocal should_continue
         end_game = input("Would you like to continue?.. 'y' or 'n': ").lower()
         should_continue = True if end_game == "y" else False
         if should_continue:
-            clear()  
+            clear_console()  # Use the custom clear_console function
             print(logo)
 
     for word in common_words:
